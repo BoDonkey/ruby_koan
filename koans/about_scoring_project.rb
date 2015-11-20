@@ -31,6 +31,8 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 
 def score(dice)
   # You need to write this method
+  d_array = dice.sort
+  
 end
 
 class AboutScoringProject < Neo::Koan
