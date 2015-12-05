@@ -29,10 +29,100 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 #
 # Your goal is to write the score method.
 
+def greedy (dice)
+    sum = 0
+    (1..6).each do |i|
+        idice = dice.select { |d| d == i }
+        if idice.size >= 3
+            sum += (i==1 ? 1000 : i*100)
+        end
+        sum += (idice.size % 3) * 100   if i == 1
+        sum += (idice.size % 3) *  50   if i == 5
+    end
+    sum
+end
+
+def greed(dice)
+  d = {}
+  dice.each do |i|
+    d[i] = 0 if d[i].nil?
+    d[i] += 1
+  end
+  n = 0
+  d.each do |k,v|
+    if v >= 3
+      if k == 1
+        n += 1000
+      else
+        n += 100*k
+      end
+      v -= 3
+    end
+    v.times do
+      n += case k
+        when 5
+          50
+        when 1
+          100
+        else
+          0
+        end
+    end
+  end
+  n
+end
+
 def score(dice)
-  # You need to write this method
-  d_array = dice.sort
-  
+    the_score = 0
+  hash_table = Hash[dice.group_by{ |v| v }.map{ |k, v| [k, v.size]}]
+  if hash_table.has_key?(1) then
+    case hash_table[1]
+    when 1, 2
+      the_score += hash_table[1] * 100
+      puts("correct when")
+    when 3
+      the_score += 1000
+    when 4, 5, 6
+      the_score += ((hash_table[1] - 3)*100) + 1000
+    end
+    puts("Has #{hash_table[1]} no. 1 worth #{the_score}")
+  end
+  if hash_table.has_key?(5) then
+    case hash_table[5]
+    when 1, 2
+      the_score += hash_table[5] * 50
+    when 3
+      the_score += 500
+    when 4, 5, 6
+      the_score += ((hash_table[5] - 3)*50) + 500
+    end
+    puts("has 5 #{the_score}")
+  end
+  if hash_table.has_key?(2) then
+    if hash_table[2] >= 3
+      the_score += 200
+    end
+    puts("has 2 #{the_score}")
+  end
+  if hash_table.has_key?(3) then
+    if hash_table[3] >= 3
+      the_score += 300
+    end
+    puts("has 3 #{the_score}")
+  end
+  if hash_table.has_key?(4) then
+    if hash_table[4] >= 3
+      the_score += 400
+    end
+    puts("has 4 #{the_score}")
+  end
+  if hash_table.has_key?(6) then
+    if hash_table[6] >= 3
+      the_score += 600
+    end
+    puts("has 6 #{the_score}")
+  end
+return the_score
 end
 
 class AboutScoringProject < Neo::Koan
